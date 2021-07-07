@@ -1,24 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import BankInfo from "./components/pages/BankInfo";
+import Dashboard from "./components/pages/Dashboard";
+import Home from "./components/pages/Home";
+import OfferLetter from "./components/pages/OfferLetter";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <Switch>
+          <Route path="/" exact component={Home} />
+          <Route path="/nyif/dashboard" exact component={Dashboard} />
+          <Route path="/nyif/offer-letter" exact component={OfferLetter} />
+          <Route path="/nyif/bank-info" exact component={BankInfo} />
+        </Switch>
+      </Router>
+    </>
   );
 }
 
