@@ -2,29 +2,29 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styles from "./styles.module.css";
 import ImgCard from "../UI/ImgCard";
-import { validateBvn } from "../../actions/validationActions";
+import { updateDetails } from "../../actions/validationActions";
 import Loading from "../Loading";
 import { Link } from "react-router-dom";
 import img from "../../assets/logo.png";
 
-const Validation = ({ history }) => {
+const BankUpdateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [bvn, setBVN] = useState("");
 
-  const userDetails = useSelector((state) => state.userDetails);
-  const { loading, error, userInfo } = userDetails;
+  const status = useSelector((state) => state.status);
+  const { loading, error, userUpdate } = status;
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(validateBvn(bvn));
+    dispatch(updateDetails(bvn));
   };
 
   useEffect(() => {
-    if (userInfo) {
-      history.push("/nyif/dashboard");
+    if (userUpdate) {
+      history.push("/nyif/update/bankinfo");
     }
-  }, [userInfo, history]);
+  }, [userUpdate, history]);
   return (
     <div className={styles.contents}>
       <div className={styles.grid}>
@@ -67,4 +67,4 @@ const Validation = ({ history }) => {
   );
 };
 
-export default Validation;
+export default BankUpdateScreen;

@@ -1,36 +1,67 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { Route } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import styles from "./styles.module.css";
 import Navbar from "../Navbar";
 import MiniNav from "../Navbar/MiniNav";
-import { useHistory } from "react-router";
+//import { useHistory } from "react-router";
+import { USER_ACCEPT_TERMS_SUCCESS } from "../../constants/bvnConstants";
 
-const Dashboard = () => {
-  const history = useHistory();
+const Dashboard = ({ history }) => {
+  //const history = useHistory();
+  const dispatch = useDispatch();
   const userDetails = useSelector((state) => state.userDetails);
   const { userInfo } = userDetails;
 
-  const [name, setName] = useState(userInfo.fullName);
-  const [loanAmount, setLoanAmount] = useState(userInfo.approvedLoanAmount);
-  const [loanTenor, setLoanTenor] = useState(userInfo.approvedLoanTenor);
+  useEffect(() => {
+    if (!userInfo) {
+      history.push("/");
+    }
+    const bank = userInfo && userInfo.otherBankName;
+    if (userInfo && userInfo.offerAcceptance === "Accepted" && bank) {
+      history.push("/nyif/letter");
+    }
+    if (userInfo && userInfo.offerAcceptance === "Rejected") {
+      history.push("/nyif/letter");
+    }
+    if (userInfo && userInfo.offerAcceptance === "Accepted" && !bank) {
+      dispatch({
+        type: USER_ACCEPT_TERMS_SUCCESS,
+      });
+      history.push("/nyif/bank-info");
+    }
+  }, [history, userInfo, dispatch]);
+  const fname = userInfo && userInfo.firstName;
+  const mname = userInfo && userInfo.secondName;
+  const lname = userInfo && userInfo.lastName;
+  const username = fname + " " + mname + " " + lname;
+  const [name, setName] = useState(
+    userInfo && userInfo.firstName ? username : userInfo && userInfo.fullName
+  );
+  const [loanAmount, setLoanAmount] = useState(
+    userInfo && userInfo.approvedLoanAmount
+  );
+  const [loanTenor, setLoanTenor] = useState(
+    userInfo && userInfo.approvedLoanTenor
+  );
   const [loanMoratorium, setLoanMoratorium] = useState(
-    userInfo.approvedLoanMoratorium
+    userInfo && userInfo.approvedLoanMoratorium
   );
 
   const submitHandler = () => {
     history.push("/nyif/offer-letter");
   };
-  useEffect(() => {
-    if (!userInfo) {
-      history.push("/");
-    }
-  }, [userInfo, history]);
+
   return (
     <div className={styles.contents}>
       <div className={styles.appGrid}>
         <Navbar />
         <div className={styles.contents}>
-          <MiniNav title="Dashboard" />
+          <Route
+            render={({ history }) => (
+              <MiniNav history={history} title="Dashboard" />
+            )}
+          />
           <div className={`${styles.forms} ${styles.formPadding}`}>
             <form>
               <div className="row">
@@ -50,7 +81,11 @@ const Dashboard = () => {
                   <input
                     type="text"
                     className={`form-control`}
-                    value={loanAmount}
+                    value={Number(loanAmount).toLocaleString("en-GB", {
+                      style: "currency",
+                      currency: "NGN",
+                      minimumFractionDigits: 2,
+                    })}
                     onChange={(e) => setLoanAmount(e.target.value)}
                     readOnly
                   />

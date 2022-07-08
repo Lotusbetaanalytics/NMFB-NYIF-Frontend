@@ -5,6 +5,8 @@ import Navbar from "../Navbar";
 import MiniNav from "../Navbar/MiniNav";
 import Offer from "../Offer";
 import Agreement from "../Agreement";
+import { Route } from "react-router-dom";
+
 import {
   acceptTerms,
   rejectTerms,
@@ -20,6 +22,10 @@ const OfferLetter = () => {
 
   const userDetails = useSelector((state) => state.userDetails);
   const { userInfo } = userDetails;
+  const fname = userInfo && userInfo.firstName;
+  const mname = userInfo && userInfo.secondName;
+  const lname = userInfo && userInfo.lastName;
+  const name = fname + " " + mname + " " + lname;
 
   const userAccept = useSelector((state) => state.userAccept);
   const { loading, success, error } = userAccept;
@@ -29,7 +35,8 @@ const OfferLetter = () => {
 
   const submitHandler = () => {
     const offeracceptance = "Accepted";
-    dispatch(acceptTerms(userInfo.userId, offeracceptance));
+    const bvn = userInfo.bvn;
+    dispatch(acceptTerms(bvn, name, offeracceptance));
   };
   const rejectHandler = () => {
     swal({
@@ -41,7 +48,8 @@ const OfferLetter = () => {
     }).then((willDelete) => {
       if (willDelete) {
         const offeracceptance = "Rejected";
-        dispatch(rejectTerms(userInfo.userId, offeracceptance));
+        const bvn = userInfo.bvn;
+        dispatch(rejectTerms(bvn, name, offeracceptance));
         dispatch(logout());
         history.push("/");
       } else {
@@ -58,13 +66,21 @@ const OfferLetter = () => {
     }
   }, [success, userInfo, history]);
 
+  const ref = React.createRef();
   return (
     <div className={styles.contents}>
       <div className={styles.appGrid}>
         <Navbar />
         <div className={styles.contents}>
-          <MiniNav title="Offer Letter" />
-          <div className={`${styles.offer}`}>
+          <Route
+            render={({ history }) => (
+              <MiniNav history={history} title="Offer Letter" />
+            )}
+          />
+          {/* <ReactToPdf targetRef={ref} filename="div-blue.pdf">
+            {({ toPdf }) => <button onClick={toPdf}>Generate pdf</button>}
+          </ReactToPdf> */}
+          <div className={`${styles.offer}`} ref={ref}>
             <Offer userInfo={userInfo} />
             <Agreement userInfo={userInfo} />
             <br />

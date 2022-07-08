@@ -6,6 +6,8 @@ import {
   userAcceptReducer,
   userRejectReducer,
   updateBankReducer,
+  updateDetailsReducer,
+  updateNewBankReducer,
 } from "./reducers/bvnReducers";
 
 const reducer = combineReducers({
@@ -13,6 +15,8 @@ const reducer = combineReducers({
   userAccept: userAcceptReducer,
   userReject: userRejectReducer,
   userBank: updateBankReducer,
+  status: updateDetailsReducer,
+  update: updateNewBankReducer,
 });
 const userInfoFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))

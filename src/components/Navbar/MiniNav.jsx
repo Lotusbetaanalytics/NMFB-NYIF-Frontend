@@ -1,15 +1,13 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
 import styles from './styles.module.css';
 
 
-const MiniNav = (props) => {
+const MiniNav = ({ title, history }) => {
 
     const userDetails = useSelector((state) => state.userDetails);
     const { userInfo } = userDetails;
 
-    const history = useHistory();
     useEffect(() => {
         if (!userInfo) {
             history.push("/")
@@ -17,8 +15,8 @@ const MiniNav = (props) => {
     }, [userInfo, history])
     return (
         <div className={styles.miniNav}>
-            <h5>{props.title}</h5>
-            <p className="text-right">Welcome {userInfo.fullName}!</p>
+            <h5>{title}</h5>
+            <p className="text-right">Welcome {userInfo && userInfo.firstName}!</p>
         </div>
     )
 }

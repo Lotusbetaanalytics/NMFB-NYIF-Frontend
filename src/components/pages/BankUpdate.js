@@ -3,49 +3,51 @@ import styles from "./styles.module.css";
 import Navbar from "../Navbar";
 import MiniNav from "../Navbar/MiniNav";
 import { useDispatch, useSelector } from "react-redux";
-import { updateBank, logout } from "../../actions/validationActions";
+import { newBankDetails, logout } from "../../actions/validationActions";
 import Loading from "../Loading";
-import { Route } from "react-router-dom";
 
-const BankInfo = ({ history }) => {
+const BankUpdate = ({ history }) => {
   const dispatch = useDispatch();
-  const [bankname, setBankName] = useState();
-  const [accountNumber, setAccountNumber] = useState();
+
   const [message, setMessage] = useState();
 
-  const userDetails = useSelector((state) => state.userDetails);
-  const { userInfo } = userDetails;
+  const status = useSelector((state) => state.status);
+  const { userUpdate } = status;
 
-  const userAccept = useSelector((state) => state.userAccept);
-  const { success, userAccept: useracceptance } = userAccept;
+  const [bankname, setBankName] = useState(
+    userUpdate.otherBankName ? userUpdate.otherBankName : ""
+  );
+  const [accountNumber, setAccountNumber] = useState(
+    userUpdate.otherAccountNumber ? userUpdate.otherAccountNumber : ""
+  );
 
-  const userBank = useSelector((state) => state.userBank);
-  const { loading, error, success: successBank } = userBank;
+  //   const userBank = useSelector((state) => state.userBank);
+  //   const { loading, error, success: successBank } = userBank;
+
+  const update = useSelector((state) => state.update);
+  const { loading, error, success } = update;
 
   const submitHandler = (e) => {
     e.preventDefault();
+    // if (bankname === undefined) {
+    //   setMessage("Select Bank");
+    // }
+    // if (accountNumber.length < 10 || accountNumber.length > 10) {
+    //   setMessage("Account Number must be 10digits");
+    // }
     if (bankname === undefined) {
-      setMessage("Select Bank");
-    }
-    if (accountNumber.length < 10 || accountNumber.length > 10) {
-      setMessage("Account Number must be 10digits");
+      setMessage("Select a Bank");
     } else {
       setMessage("");
-      var Id;
-      if (useracceptance && useracceptance.id) {
-        Id = useracceptance.id;
-      } else {
-        Id = userInfo.id;
-      }
-
-      dispatch(updateBank(Id, bankname, accountNumber));
+      const Id = userUpdate.id;
+      dispatch(newBankDetails(Id, bankname, accountNumber));
     }
   };
   useEffect(() => {
-    if (!userInfo || !success) {
-      history.push("/nyif/offer-letter");
+    if (!userUpdate) {
+      history.push("/nyif/updatebank");
     }
-  }, [userInfo, history, success]);
+  }, [userUpdate, history, success]);
 
   const logoutHandler = () => {
     dispatch(logout());
@@ -57,15 +59,11 @@ const BankInfo = ({ history }) => {
       <div className={styles.appGrid}>
         <Navbar />
         <div className={styles.contents}>
-          <Route
-            render={({ history }) => (
-              <MiniNav history={history} title="Dashboard" />
-            )}
-          />
+          {/* <MiniNav title="Bank Info" /> */}
           <div className={`${styles.forms} ${styles.formPadding}`}>
             {loading && <Loading />}
             {error && <div className="alert alert-danger">{error}</div>}
-            {successBank && (
+            {success && (
               <div className="alert alert-success">
                 Bank details has been uploaded successfully!
               </div>
@@ -74,7 +72,7 @@ const BankInfo = ({ history }) => {
             <form onSubmit={submitHandler}>
               <div className="row">
                 {message && <div className="alert alert-info">{message}</div>}
-                {successBank ? (
+                {success ? (
                   <div className={`${styles.padding} col-md-4 form-group`}>
                     <button
                       type="button"
@@ -93,6 +91,7 @@ const BankInfo = ({ history }) => {
                         type="text"
                         className={`form-control ${message && "border-danger"}`}
                         onChange={(e) => setBankName(e.target.value)}
+                        value={bankname}
                       >
                         <option>Select Bank</option>
                         <option value="FIRST BANK PLC">FIRST BANK PLC</option>
@@ -181,6 +180,7 @@ const BankInfo = ({ history }) => {
                         onChange={(e) => setAccountNumber(e.target.value)}
                         required
                         maxLength="10"
+                        value={accountNumber}
                       />
                     </div>
 
@@ -205,4 +205,4 @@ const BankInfo = ({ history }) => {
   );
 };
 
-export default BankInfo;
+export default BankUpdate;

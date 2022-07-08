@@ -28,17 +28,30 @@ const Offer = ({ userInfo }) => {
         }
     }, [userInfo, history])
 
+    let username;
+    const name = userInfo && userInfo.fullName
+    if (!name) {
+        const fname = userInfo && userInfo.firstName;
+        const mname = userInfo && userInfo.secondName;
+        const lname = userInfo && userInfo.lastName;
+        username = fname + " " + mname + " " + lname;
+
+    } else {
+        username = userInfo && userInfo.fullName
+    }
+
+
     return (
         <div>
             <h5>NIGERIA YOUTH INVESTMENT FUND (NYIF) - LOAN OFFER LETTER</h5>
             <h6>
-                <b className="text-danger">REFERENCE NO: NMFB/NYIF/{date}/{userInfo.userId}           &nbsp;&nbsp;&nbsp; DATE: {today}</b>
+                <b className="text-danger">REFERENCE NO: NMFB/NYIF/{date}/{userInfo && userInfo.id}           &nbsp;&nbsp;&nbsp; DATE: {today}</b>
             </h6>
-            <p>Customer Name : {userInfo.businessCategory === "Indivdual" ? userInfo.fullName : userInfo.businessName}</p>
-            <p>Address : {userInfo.residentialAddress}</p> <br />
+            <p>Customer Name : {userInfo && userInfo.category === "Individual" ? username : username}</p>
+            <p>Address : {userInfo && userInfo.address}</p> <br />
             <p>Dear Sir/Ma,</p>
             <h6>
-                <b>OFFER OF {userInfo.businessCategory === "Indivdual" ? "INFORMAL" : "FORMAL"} BUSINESS ENTERPRISES LOAN FACILITY (NYIF)</b>
+                <b>OFFER OF {userInfo && userInfo.category === "Individual" ? "INFORMAL" : "FORMAL"} BUSINESS ENTERPRISES LOAN FACILITY (NYIF)</b>
             </h6>
             <p>
                 We refer to your application for a Formal Business Enterprises
@@ -46,11 +59,11 @@ const Offer = ({ userInfo }) => {
                 Intervention Scheme and are pleased to inform you that the
                 Management of NIRSAL Microfinance Bank Ltd (hereinafter referred
                 to as ‘the bank’) has approved the sum of{" "}
-                <b className="text-danger">N{userInfo.approvedLoanAmount}</b>,
+                <b className="text-danger">{Number(userInfo && userInfo.approvedLoanAmount).toLocaleString("en-GB", { style: "currency", currency: "NGN", minimumFractionDigits: 2 })}</b>,
                 subject to the following terms and conditions:
             </p>
             <h6>
-                <b>BORROWERS NAME:</b> {userInfo.businessCategory === "Indivdual" ? userInfo.fullName : userInfo.businessName}
+                <b>BORROWERS NAME:</b> {userInfo && userInfo.category === "Individual" ? username : username}
             </h6>
             <h6>
                 <b>LENDER:</b> NIRSAL Microfinance Bank Ltd
@@ -63,7 +76,7 @@ const Offer = ({ userInfo }) => {
             </h6>
             <h6>
                 <b>APPROVED LOAN AMOUNT:</b>{" "}
-                <b className="text-danger">N{userInfo.approvedLoanAmount}</b>
+                <b className="text-danger">{Number(userInfo && userInfo.approvedLoanAmount).toLocaleString("en-GB", { style: "currency", currency: "NGN", minimumFractionDigits: 2 })}</b>
             </h6>
             <h6>
                 <b>INTEREST RATE AND OTHER CHARGES:</b> 4% one off facility
@@ -152,11 +165,11 @@ const Offer = ({ userInfo }) => {
                 </div>
             </div>
             <h6><b><u>MEMORANDUM OF ACCEPTANCE</u></b></h6>
-            <p>I, <b>{userInfo.Name}</b> have read this Offer Letter and the loan agreement and fully understand it.
-                I am pleased to willingly accept the Offer of N{userInfo.approvedLoanAmount} Nigerian Youth Investment Fund (NYIF),
+            <p>I, <b>{userInfo && userInfo.Name}</b> have read this Offer Letter and the loan agreement and fully understand it.
+                I am pleased to willingly accept the Offer of {Number(userInfo && userInfo.approvedLoanAmount).toLocaleString("en-GB", { style: "currency", currency: "NGN", minimumFractionDigits: 2 })} Nigerian Youth Investment Fund (NYIF),
                 along with the Terms and Conditions contained, herein, in the offer letter and the loan agreement dated <b>{today} </b>and signed by me.
             </p>
-            <p><b>NAME:</b> {userInfo.businessCategory === "Indivdual" ? userInfo.fullName : userInfo.businessName}</p>
+            <p><b>NAME:</b> {userInfo && userInfo.category === "Individual" ? username : username}</p>
             <p><b>SIGNATURE/DATE:</b> {today}</p>
 
         </div>

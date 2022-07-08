@@ -49,6 +49,18 @@ const Agreement = ({ userInfo }) => {
     curMonth = months[objToday.getMonth()],
     curYear = objToday.getFullYear();
   today = dayOfWeek + " " + dayOfMonth + " of " + curMonth + ", " + curYear;
+
+  let username;
+
+  const name = userInfo && userInfo.fullName;
+  if (!name) {
+    const fname = userInfo && userInfo.firstName;
+    const mname = userInfo && userInfo.secondName;
+    const lname = userInfo && userInfo.lastName;
+    username = fname + " " + mname + " " + lname;
+  } else {
+    username = userInfo && userInfo.fullName;
+  }
   return (
     <>
       <h5 className="text-center">
@@ -70,13 +82,13 @@ const Agreement = ({ userInfo }) => {
       </p>
       <p>
         AND
-        {userInfo.businessCategory === "Indivdual"
-          ? userInfo.fullName
-          : userInfo.businessName}{" "}
-        of {userInfo.residentialAddress} (hereinafter referred to as ‘the
-        Borrower’ and which expression shall where the context so admits include
-        his/her personal representatives, heirs and assigns) of the other part;
-        (each ‘a party’ and collectively ‘the parties’).
+        {userInfo && userInfo.category === "Individual"
+          ? username
+          : username}{" "}
+        of {userInfo && userInfo.residentialAddress} (hereinafter referred to as
+        ‘the Borrower’ and which expression shall where the context so admits
+        include his/her personal representatives, heirs and assigns) of the
+        other part; (each ‘a party’ and collectively ‘the parties’).
       </p>
       <p>
         <b>WHEREAS:</b>
@@ -89,11 +101,21 @@ const Agreement = ({ userInfo }) => {
       </p>
       <p>
         Sequel to the Borrower’s aforesaid application, the Bank offered the
-        Borrower a Term loan facility of N{userInfo.approvedLoanAmount} vide a
-        letter titled{" "}
+        Borrower a Term loan facility of{" "}
+        {Number(userInfo && userInfo.approvedLoanAmount).toLocaleString(
+          "en-GB",
+          {
+            style: "currency",
+            currency: "NGN",
+            minimumFractionDigits: 2,
+          }
+        )}{" "}
+        vide a letter titled{" "}
         <b>
           ‘OFFER OF{" "}
-          {userInfo.businessCategory === "Indivdual" ? "INFORMAL" : "FORMAL"}{" "}
+          {userInfo && userInfo.category === "Individual"
+            ? "INFORMAL"
+            : "FORMAL"}{" "}
           BUSINESS ENTERPRISES LOAN FACILITY (NYIF)
         </b>{" "}
         and dated {today}, on the terms and conditions specified therein.
@@ -110,8 +132,17 @@ const Agreement = ({ userInfo }) => {
       <p>
         Subject to the terms and conditions of this Loan Agreement, the Bank
         hereby agrees to make available to the Borrower a Term loan facility of{" "}
-        <b className="text-danger">N{userInfo.approvedLoanAmount}</b>, pursuant
-        to the Borrower’s application for a NYIF.{" "}
+        <b className="text-danger">
+          {Number(userInfo && userInfo.approvedLoanAmount).toLocaleString(
+            "en-GB",
+            {
+              style: "currency",
+              currency: "NGN",
+              minimumFractionDigits: 2,
+            }
+          )}
+        </b>
+        , pursuant to the Borrower’s application for a NYIF.{" "}
       </p>
       <p>
         1. Repayment Subject to the provisions hereunder, the Borrower shall
@@ -468,9 +499,7 @@ const Agreement = ({ userInfo }) => {
         <b>SIGNED AND DELIVERED</b>
         &nbsp;by the Within named Borrower
       </p>
-      {userInfo.businessCategory === "Indivdual"
-        ? userInfo.fullName
-        : userInfo.businessName}
+      {userInfo && userInfo.category === "Individual" ? username : username}
     </>
   );
 };

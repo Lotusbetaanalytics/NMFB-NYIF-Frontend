@@ -26,6 +26,13 @@
     overflow: scroll
 }
 
+.offerx {
+    width: 100%;
+    padding: 2rem 7rem;
+    height: auto;
+    display: block;
+}
+
 .offer p {
     text-align: justify;
 }
@@ -53,7 +60,9 @@
 
 .forms input[type="email"],
 [type="password"],
-[type="text"] {
+[type="text"],
+[type="tel"],
+[type="number"] {
     border-radius: 0;
     padding: 1rem;
 }
@@ -121,6 +130,11 @@ small {
         grid-template-columns: 100%;
     }
 
+    .offer {
+        width: 100%;
+        padding: 2rem;
+    }
+
 }
 
 /* tablet-portait-only */
@@ -140,6 +154,10 @@ small {
     .appGrid {
         display: grid;
         grid-template-columns: 13% 87%;
+    }
+
+    .offer {
+        padding: 2rem 7rem;
     }
 }
 
@@ -161,6 +179,10 @@ small {
         display: grid;
         grid-template-columns: 13% 87%;
     }
+
+    .offer {
+        padding: 2rem 7rem;
+    }
 }
 
 /* tablet-landscape-only */
@@ -180,6 +202,10 @@ small {
     .appGrid {
         display: grid;
         grid-template-columns: 13% 87%;
+    }
+
+    .offer {
+        padding: 2rem 7rem;
     }
 }
 
@@ -201,6 +227,10 @@ small {
         display: grid;
         grid-template-columns: 13% 87%;
     }
+
+    .offer {
+        padding: 2rem 7rem;
+    }
 }
 
 /* desktop-only */
@@ -220,6 +250,10 @@ small {
     .appGrid {
         display: grid;
         grid-template-columns: 13% 87%;
+    }
+
+    .offer {
+        padding: 2rem 7rem;
     }
 }
 
